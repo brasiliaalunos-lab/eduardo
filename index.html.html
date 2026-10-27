@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FutMania - Portal de Notícias e Placares de Futebol</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        pitch: {
+                            50: '#f0fdf4',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                        },
+                        darkbase: '#0f172a',
+                        cardbase: '#1e293b'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        /* Custom pulsing animation for LIVE indicator */
+        @keyframes pulse-live {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.05); }
+        }
+        .live-pulse {
+            animation: pulse-live 1.5s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-darkbase text-slate-100 min-h-screen flex flex-col justify-between selection:bg-pitch-500 selection:text-white">
+
+    <!-- HEADER & NAVBAR -->
+    <header class="sticky top-0 z-50 bg-darkbase/95 backdrop-blur border-b border-slate-800 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Logo & Live Indicator -->
+                <div class="flex items-center space-x-6">
+                    <a href="#" class="flex items-center space-x-2 group">
+                        <div class="bg-gradient-to-tr from-pitch-600 to-pitch-500 text-white p-2.5 rounded-xl shadow-md group-hover:scale-105 transition duration-300">
+                            <i class="fa-solid fa-futbol text-xl"></i>
+                        </div>
+                        <span class="text-2xl font-extrabold tracking-wider bg-gradient-to-r from-white via-slate-200 to-pitch-500 bg-clip-text text-transparent">
+                            Fut<span class="text-pitch-500">Mania</span>
+                        </span>
+                    </a>
+
+                    <!-- Live Badge -->
+                    <div class="hidden sm:flex items-center space-x-2 bg-red-500/10 border border-red-500/30 px-3 py-1 rounded-full text-xs font-semibold text-red-400">
+                        <span class="w-2.5 h-2.5 rounded-full bg-red-500 live-pulse inline-block"></span>
+                        <span>AO VIVO: BRASILEIRÃO 2026</span>
+                    </div>
+                </div>
+
+                <!-- Desktop Nav Links -->
+                <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
+                    <a href="#inicio" class="text-pitch-500 transition hover:text-pitch-400">Início</a>
+                    <a href="#noticias" class="text-slate-300 hover:text-pitch-400 transition">Notícias</a>
+                    <a href="#tabela" class="text-slate-300 hover:text-pitch-400 transition">Tabela</a>
+                    <a href="#jogos" class="text-slate-300 hover:text-pitch-400 transition">Jogos & Palpites</a>
+                    <a href="#contato" class="text-slate-300 hover:text-pitch-400 transition">Contato</a>
+                </nav>
+
+                <!-- CTA Button / Mobile Menu Toggle -->
+                <div class="flex items-center space-x-4">
+                    <a href="#jogos" class="hidden sm:inline-flex items-center space-x-2 bg-pitch-500 hover:bg-pitch-600 text-darkbase font-bold px-5 py-2.5 rounded-xl shadow-lg shadow-pitch-500/20 transition duration-300 hover:scale-105">
+                        <i class="fa-solid fa-fire"></i>
+                        <span>Palpitar Agora</span>
+                    </a>
+
+                    <!-- Mobile Menu Button -->
+                    <button id="menu-btn" aria-label="Abrir Menu" class="md:hidden text-slate-300 hover:text-white focus:outline-none p-2 rounded-lg bg-slate-800">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-900 border-b border-slate-800 px-4 pt-2 pb-6 space-y-3">
+            <a href="#inicio" class="block py-2 text-pitch-500 font-semibold border-b border-slate-800">Início</a>
+            <a href="#noticias" class="block py-2 text-slate-300 hover:text-pitch-400 border-b border-slate-800">Notícias</a>
+            <a href="#tabela" class="block py-2 text-slate-300 hover:text-pitch-400 border-b border-slate-800">Tabela</a>
+            <a href="#jogos" class="block py-2 text-slate-300 hover:text-pitch-400 border-b border-slate-800">Jogos & Palpites</a>
+            <a href="#contato" class="block py-2 text-slate-300 hover:text-pitch-400">Contato</a>
+            <div class="pt-2">
+                <a href="#jogos" class="w-full text-center block bg-pitch-500 text-darkbase font-bold py-2.5 rounded-xl">Palpitar Agora</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-grow">
+
+        <!-- HERO SECTION -->
+        <section id="inicio" class="relative py-12 lg:py-20 overflow-hidden border-b border-slate-800/60">
+            <div class="absolute inset-0 z-0 opacity-20 bg-[radial-gradient(#22c55e_1px,transparent_1px)] [background-size:16px_16px]"></div>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    
+                    <!-- Hero Main Story -->
+                    <div class="lg:col-span-8 space-y-6">
+                        <div class="inline-flex items-center space-x-2 bg-pitch-500/10 border border-pitch-500/30 px-3 py-1 rounded-full text-xs font-semibold text-pitch-400">
+                            <i class="fa-solid fa-bolt"></i>
+                            <span>MANCHETE DA RODADA</span>
+                        </div>
+                        <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
+                            Clássico Decisivo: <span class="text-pitch-500">Goleada Histórica</span> agita a reta final do campeonato!
+                        </h1>
+                        <p class="text-slate-400 text-base sm:text-lg max-w-2xl leading-relaxed">
+                            Em uma partida eletrizante marcada por reviravoltas e golaços, o líder consolida sua vantagem na tabela enquanto a briga pelo G4 se intensifica nas últimas rodadas. Confira os detalhes e lances capitais.
+                        </p>
+                        <div class="flex flex-wrap items-center gap-4 pt-2">
+                            <a href="#noticias" class="bg-pitch-500 hover:bg-pitch-600 text-darkbase font-bold px-6 py-3 rounded-xl shadow-lg shadow-pitch-500/20 transition duration-300 flex items-center space-x-2">
+                                <span>Ler Matéria Completa</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                            <a href="#jogos" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold px-6 py-3 rounded-xl border border-slate-700 transition duration-300">
+                                Ver Próximos Jogos
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Hero Sidebar Card -->
+                    <div class="lg:col-span-4 bg-cardbase border border-slate-700/60 rounded-2xl p-6 shadow-xl relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 bg-pitch-500 text-darkbase font-extrabold text-xs px-3 py-1 rounded-bl-xl uppercase tracking-wider">
+                            Destaque Ao Vivo
+                        </div>
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center font-bold text-pitch-400">FLA</div>
+                            <span class="text-slate-400 font-semibold">vs</span>
+                            <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center font-bold text-pitch-400">PAL</div>
+                        </div>
+                        <h3 class="text-lg font-bold mb-2">Flamengo 2 x 1 Palmeiras</h3>
+                        <p class="text-xs text-slate-400 mb-4">⏱️ 82' do 2º Tempo • Estádio Maracanã</p>
+                        <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden mb-4">
+                            <div class="bg-pitch-500 h-full w-4/5 animate-pulse"></div>
+                        </div>
+                        <div class="flex justify-between text-xs text-slate-400">
+                            <span>Posse: 54%</span>
+                            <span class="text-pitch-400 font-bold">Pressão Máxima</span>
+                            <span>Posse: 46%</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- LATEST NEWS SECTION -->
+        <section id="noticias" class="py-16 bg-slate-900/40">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-10">
+                    <div>
+                        <span class="text-pitch-500 font-bold tracking-wider uppercase text-xs">Atualizações Diárias</span>
+                        <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight mt-1">Últimas Notícias</h2>
+                    </div>
+                    <p class="text-slate-400 text-sm mt-2 md:mt-0">Fique por dentro do mercado da bola, entrevistas e análises táticas.</p>
+                </div>
+
+                <!-- News Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    
+                    <!-- Card 1 -->
+                    <article class="bg-cardbase border border-slate-800 rounded-2xl overflow-hidden shadow-lg group hover:border-pitch-500/50 transition duration-300 flex flex-col justify-between">
+                        <div>
+                            <div class="relative h-48 overflow-hidden bg-slate-800">
+                                <img src="https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=600&q=80" alt="Estádio iluminado" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/600x400/1e293b/22c55e?text=FutMania'">
+                                <span class="absolute top-3 left-3 bg-pitch-500 text-darkbase font-bold text-xs px-2.5 py-1 rounded-lg">Mercado da Bola</span>
+                            </div>
+                            <div class="p-6 space-y-3">
+                                <div class="flex items-center text-xs text-slate-400 space-x-3">
+                                    <span><i class="fa-regular fa-calendar mr-1"></i> 27 de Out, 2026</span>
+                                    <span>•</span>
+                                    <span><i class="fa-regular fa-clock mr-1"></i> 4 min de leitura</span>
+                                </div>
+                                <h3 class="text-xl font-bold group-hover:text-pitch-400 transition">Craque europeu entra na mira de gigante brasileiro para a próxima janela</h3>
+                                <p class="text-slate-400 text-sm line-clamp-2">Negociações avançam nos bastidores e diretoria promete anúncio bombástico nos próximos dias para encantar a torcida.</p>
+                            </div>
+                        </div>
+                        <div class="px-6 pb-6 pt-0">
+                            <a href="#" class="inline-flex items-center space-x-2 text-pitch-400 font-semibold text-sm hover:text-pitch-300">
+                                <span>Ler matéria completa</span>
+                                <i class="fa-solid fa-arrow-right text-xs"></i>
+                            </a>
+                        </div>
+                    </article>
+
+                    <!-- Card 2 -->
+                    <article class="bg-cardbase border border-slate-800 rounded-2xl overflow-hidden shadow-lg group hover:border-pitch-500/50 transition duration-300 flex flex-col justify-between">
+                        <div>
+                            <div class="relative h-48 overflow-hidden bg-slate-800">
+                                <img src="https://images.unsplash.com/photo-1518091043644-c1d4457512c6?auto=format&fit=crop&w=600&q=80" alt="Bola de futebol no gramado" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/600x400/1e293b/22c55e?text=FutMania'">
+                                <span class="absolute top-3 left-3 bg-blue-600 text-white font-bold text-xs px-2.5 py-1 rounded-lg">Análise Tática</span>
+                            </div>
+                            <div class="p-6 space-y-3">
+                                <div class="flex items-center text-xs text-slate-400 space-x-3">
+                                    <span><i class="fa-regular fa-calendar mr-1"></i> 26 de Out, 2026</span>
+                                    <span>•</span>
+                                    <span><i class="fa-regular fa-clock mr-1"></i> 6 min de leitura</span>
+                                </div>
+                                <h3 class="text-xl font-bold group-hover:text-pitch-400 transition">Como o esquema de 3 zagueiros revolucionou o topo da tabela neste ano</h3>
+                                <p class="text-slate-400 text-sm line-clamp-2">Análise aprofundada sobre a transição defensiva e a liberdade dos alas que vêm decidindo os grandes clássicos nacionais.</p>
+                            </div>
+                        </div>
+                        <div class="px-6 pb-6 pt-0">
+                            <a href="#" class="inline-flex items-center space-x-2 text-pitch-400 font-semibold text-sm hover:text-pitch-300">
+                                <span>Ler matéria completa</span>
+                                <i class="fa-solid fa-arrow-right text-xs"></i>
+                            </a>
+                        </div>
+                    </article>
+
+                    <!-- Card 3 -->
+                    <article class="bg-cardbase border border-slate-800 rounded-2xl overflow-hidden shadow-lg group hover:border-pitch-500/50 transition duration-300 flex flex-col justify-between">
+                        <div>
+                            <div class="relative h-48 overflow-hidden bg-slate-800">
+                                <img src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=600&q=80" alt="Comemoração de gol" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.src='https://placehold.co/600x400/1e293b/22c55e?text=FutMania'">
+                                <span class="absolute top-3 left-3 bg-amber-500 text-darkbase font-bold text-xs px-2.5 py-1 rounded-lg">Copa do Brasil</span>
+                            </div>
+                            <div class="p-6 space-y-3">
+                                <div class="flex items-center text-xs text-slate-400 space-x-3">
+                                    <span><i class="fa-regular fa-calendar mr-1"></i> 25 de Out, 2026</span>
+                                    <span>•</span>
+                                    <span><i class="fa-regular fa-clock mr-1"></i> 3 min de leitura</span>
+                                </div>
+                                <h3 class="text-xl font-bold group-hover:text-pitch-400 transition">Sorteio define os mandantes dos grandes duelos das semifinais</h3>
+                                <p class="text-slate-400 text-sm line-clamp-2">Confrontos prometem casa cheia e muita emoção rumo à grande decisão do torneio mais emocionante do país.</p>
+                            </div>
+                        </div>
+                        <div class="px-6 pb-6 pt-0">
+                            <a href="#" class="inline-flex items-center space-x-2 text-pitch-400 font-semibold text-sm hover:text-pitch-300">
+                                <span>Ler matéria completa</span>
+                                <i class="fa-solid fa-arrow-right text-xs"></i>
+                            </a>
+                        </div>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- STANDINGS TABLE SECTION -->
+        <section id="tabela" class="py-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-10">
+                    <div>
+                        <span class="text-pitch-500 font-bold tracking-wider uppercase text-xs">Classificação Oficial</span>
+                        <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight mt-1">Brasileirão 2026 - G4</h2>
+                    </div>
+                    <p class="text-slate-400 text-sm mt-2 md:mt-0">Atualizado em tempo real após o término da rodada.</p>
+                </div>
+
+                <!-- Table Container -->
+                <div class="bg-cardbase border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-900/80 text-slate-400 text-xs font-semibold uppercase tracking-wider border-b border-slate-800">
+                                    <th class="py-4 px-6 text-center w-16">Pos</th>
+                                    <th class="py-4 px-6">Clube</th>
+                                    <th class="py-4 px-6 text-center">Pts</th>
+                                    <th class="py-4 px-6 text-center">J</th>
+                                    <th class="py-4 px-6 text-center">V</th>
+                                    <th class="py-4 px-6 text-center">SG</th>
+                                    <th class="py-4 px-6 text-center">Últimos Jogos</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800 text-sm font-medium">
+                                
+                                <!-- 1st Place -->
+                                <tr class="hover:bg-slate-800/50 transition bg-pitch-500/5">
+                                    <td class="py-4 px-6 text-center font-bold text-pitch-400">
+                                        <span class="bg-pitch-500/20 text-pitch-400 border border-pitch-500/30 px-2.5 py-1 rounded-lg">1</span>
+                                    </td>
+                                    <td class="py-4 px-6 flex items-center space-x-3">
+                                        <div class="w-8 h-8 rounded-full bg-red-600/20 border border-red-500/40 flex items-center justify-center font-bold text-xs text-red-400">FLA</div>
+                                        <span class="font-bold text-white">Flamengo</span>
+                                    </td>
+                                    <td class="py-4 px-6 text-center font-bold text-pitch-400 text-base">72</td>
+                                    <td class="py-4 px-6 text-center text-slate-400">34</td>
+                                    <td class="py-4 px-6 text-center text-slate-300">22</td>
+                                    <td class="py-4 px-6 text-center font-semibold text-emerald-400">+34</td>
+                                    <td class="py-4 px-6 text-center">
+                                        <div class="flex justify-center space-x-1.5">
+                                            <span class="w-6 h-6 rounded bg-emerald-500/20 text-emerald-400 font-bold text-xs flex items-center justify-center">V</span>
+                                            <span class="w-6 h-6 rounded bg-emerald-500/20 text-emerald-400 font-bold text-xs flex items-center justify-center">V</span>
+                                            <span class="w-6 h-6 rounded bg-slate-800 text-slate-300 font-bold text-xs flex items-center justify-center">E</span>
+                                            <span class="w-6 h-6 rounded bg-emerald-500/20 text-emerald-400 font-bold text-xs flex items-center justify-center">V</span>
+                                            <span class="w-6 h-6 rounded bg-red-500/20 text-red-400 font-bold text-xs flex items-center justify-center">D</span>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- 2nd Place -->
+                                <tr class="hover:bg-slate-800/50 transition">
+                                    <td class="py-4 px-6 text-center font-bold">
+                                        <span class="bg-slate-800 text-slate-300 border border-slate-700 px-2.5 py-1 rounded-lg">2</span>
+                                    </td>
+                                    <td class="py-4 px-6 flex items-center space-x-3">
+                                        <div class="w-8 h-8 rounded-full bg-emerald-600/20 border border-emerald-500/40 flex items-center justify-center font-bold text-xs text-emerald-400">PAL</div>
+                                        <span class="font-bold text-white">Palmeiras</span>
+                                    </td>
+                                    <td class="py-4 px-6 text-center font-bold text-white text-base">69</td>
+                                    <td class="py-4 px-6 text-center text-slate-400">34</td>
+                                    <td class="py-4 px-6 text-center text-slate-300">20</td>
+                                    <td class="py-4 px-6 text-center font-semibold text-emerald-400">+28</td>
+                                    <td class="py-4 px-6 text-center">
+                                        <div class="flex justify-center space-x-1.5">
+                                            <span class="w-6 h-6 rounded bg-emerald-500/20 text-emerald-400 font-bold text-xs flex items-center justify-center">V</span>
+                                            <span class="w-6 h-6 rounded bg-slate-800 text-slate-300 font-bold text-xs flex items-center justify-center">E</span>
+                                            <span class="w-6 h-6 rounded bg-emerald-500/20 text-emerald-400 font-bold text-xs flex items-center justify-center">V</span>
+                                            <span class="w-6 h-6 rounded bg-emerald-500/20 text-emerald-400 font-bold text-xs flex items-center justify-center">V</span>
+                                            <span class="w-6 h-6 rounded bg-emerald-500/20 text-emerald-400 font-bold text-xs flex items-center justify-center">V</span>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- 3rd Place -->
+                                <tr class="hover:bg-slate-800/50 transition">
+                                    <td class="py-4 px-6 text-center font-bold">
+                                        <span class="bg-slate-800 text-slate-300 border border-slate-700 px-2.5 py-1 rounded-lg">3</span>
+                                    </td>
+                                    <td class="py-4 px-6 flex items-center space-x-3">
+                                        <div class="w-8 h-8 rounded-full bg-sky-600/20 border border-sky-500/40 flex items-center justify-center font-bold text-xs text-sky-400">BOT</div>
+                                        <span class="font-bold text-white">Botafogo</span>
+                                    </td>
+                                    <td class="py-4 px-6 text-center font-bold text-white text-base">65</td>
+                                    <td class="py-4 px-6 text-center text-slate-400">34</td>
+                                    <td class="py-4 px-6 text-center text-slate-300">19</td>
+                                    <td class="py-4 px-6 text-center font-semibold text-emerald-400">+22</td>
+                                    <td class="py-4 px-6 text-center">
+                                        <div class="flex justify-center space-x-1.5">
+                                            <span class="w-6 h-6 rounded bg-red-500/20 text-red-400 font-bold text-xs flex items-center justify-center">D</span>
+                                            <span class="w-6 h-6 rounded bg-emerald-500/20 text-emerald-400 font-bold text-xs flex items-center justify-center">V</span>
+                                            <span class="w-6 h-6 rounded bg-emerald-500/20 text-emerald-400 font-bold text-xs flex items-center justify-center">V</span>
+                                            <span class="w-6 h-6 rounded bg-slate-800 text-slate-300 font-bold text-xs flex items-center justify-center">E</span>
+                                            <span class="w-6 h-6 rounded bg-emerald-500/20 text-emerald-400 font-bold text-xs flex items-center justify-center">V</span>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- 4th Place -->
+                                <tr class="hover:bg-slate-800/50 transition">
+                                    <td class="py-4 px-6 text-center font-bold">
+                                        <span class="bg-slate-800 text-slate-300 border border-slate-700 px-2.5 py-1 rounded-lg">4</span>
+                                    </td>
+                                    <td class="py-4 px-6 flex items-center space-x-3">
+                                        <div class="w-8 h-8 rounded-full bg-blue-600/20 border border-blue-500/40 flex items-center justify-center font-bold text-xs text-blue-400">SAO</div>
+                                        <span class="font-bold text-white">São Paulo</span>
+                                    </td>
+                                    <td class="py-4 px-6 text-center font-bold text-white text-base">60</td>
+                                    <td class="py-4 px-6 text-center text-slate-400">34</td>
+                                    <td class="py-4 px-6 text-center text-slate-300">17</td>
+                                    <td class="py-4 px-6 text-center font-semibold text-emerald-400">+15</td>
+                                    <td class="py-4 px-6 text-center">
+                                        <div class="flex justify-center space-x-1.5">
+                                            <span class="w-6 h-6 rounded bg-emerald-500/20 text-emerald-400 font-bold text-xs flex items-center justify-center">V</span>
+                                            <span class="w-6 h-6 rounded bg-emerald-500/20 text-emerald-400 font-bold text-xs flex items-center justify-center">V</span>
+                                            <span class="w-6 h-6 rounded bg-red-500/20 text-red-400 font-bold text-xs flex items-center justify-center">D</span>
+                                            <span class="w-6 h-6 rounded bg-emerald-500/20 text-emerald-400 font-bold text-xs flex items-center justify-center">V</span>
+                                            <span class="w-6 h-6 rounded bg-slate-800 text-slate-300 font-bold text-xs flex items-center justify-center">E</span>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="bg-slate-900/60 p-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-3 h-3 rounded-full bg-pitch-500 inline-block"></span>
+                            <span>Zona de Classificação Direta para Libertadores (G4)</span>
+                        </div>
+                        <span>*Estatísticas parciais atualizadas após a 34ª rodada.</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- MATCHES & POLLS SECTION (Interactive JS) -->
+        <section id="jogos" class="py-16 bg-slate-900/40">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="text-center max-w-2xl mx-auto mb-12">
+                    <span class="text-pitch-500 font-bold tracking-wider uppercase text-xs">Participe e Interaja</span>
+                    <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight mt-1">Próximos Jogos & Palpites</h2>
+                    <p class="text-slate-400 text-sm mt-2">Vote em quem você acha que vai vencer os grandes confrontos da rodada e acompanhe a porcentagem da torcida em tempo real!</p>
+                </div>
+
+                <!-- Match Cards Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    
+                    <!-- Match Card 1 -->
+                    <div class="bg-cardbase border border-slate-800 rounded-2xl p-6 shadow-xl relative flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-6">
+                                <span class="bg-slate-800 text-slate-300 text-xs font-semibold px-3 py-1 rounded-full border border-slate-700">Domingo, 16:00 • Morumbi</span>
+                                <span class="text-xs font-bold text-pitch-400 uppercase tracking-wider">Campeonato Brasileiro</span>
+                            </div>
+
+                            <!-- Teams VS layout -->
+                            <div class="grid grid-cols-7 items-center text-center my-4">
+                                <!-- Team A -->
+                                <div class="col-span-3 flex flex-col items-center space-y-2">
+                                    <div class="w-14 h-14 rounded-2xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center font-extrabold text-blue-400 text-lg shadow-inner">SAO</div>
+                                    <span class="font-bold text-white text-base">São Paulo</span>
+                                </div>
+                                <!-- VS -->
+                                <div class="col-span-1 text-slate-500 font-extrabold text-xl">VS</div>
+                                <!-- Team B -->
+                                <div class="col-span-3 flex flex-col items-center space-y-2">
+                                    <div class="w-14 h-14 rounded-2xl bg-amber-600/20 border border-amber-500/30 flex items-center justify-center font-extrabold text-amber-400 text-lg shadow-inner">COR</div>
+                                    <span class="font-bold text-white text-base">Corinthians</span>
+                                </div>
+                            </div>
+
+                            <!-- Live Vote Stats Bar -->
+                            <div class="mt-8 space-y-2">
+                                <div class="flex justify-between text-xs font-semibold">
+                                    <span id="match1-teamA-label" class="text-blue-400">São Paulo (58%)</span>
+                                    <span id="match1-teamB-label" class="text-amber-400">Corinthians (42%)</span>
+                                </div>
+                                <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden flex">
+                                    <div id="match1-barA" class="bg-blue-500 h-full transition-all duration-500" style="width: 58%"></div>
+                                    <div id="match1-barB" class="bg-amber-500 h-full transition-all duration-500" style="width: 42%"></div>
+                                </div>
+                                <p id="match1-total" class="text-center text-xs text-slate-400 pt-1">Total de votos: <span class="font-bold text-slate-200">1.420</span></p>
+                            </div>
+                        </div>
+
+                        <!-- Voting Buttons -->
+                        <div class="grid grid-cols-2 gap-4 mt-8 pt-6 border-t border-slate-800">
+                            <button onclick="voteMatch(1, 'A')" class="bg-blue-600/20 hover:bg-blue-600 hover:text-white text-blue-400 border border-blue-500/40 font-bold py-2.5 rounded-xl transition duration-300 flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-thumbs-up"></i>
+                                <span>Votar São Paulo</span>
+                            </button>
+                            <button onclick="voteMatch(1, 'B')" class="bg-amber-600/20 hover:bg-amber-600 hover:text-white text-amber-400 border border-amber-500/40 font-bold py-2.5 rounded-xl transition duration-300 flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-thumbs-up"></i>
+                                <span>Votar Corinthians</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Match Card 2 -->
+                    <div class="bg-cardbase border border-slate-800 rounded-2xl p-6 shadow-xl relative flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-6">
+                                <span class="bg-slate-800 text-slate-300 text-xs font-semibold px-3 py-1 rounded-full border border-slate-700">Quarta, 21:30 • Mineirão</span>
+                                <span class="text-xs font-bold text-pitch-400 uppercase tracking-wider">Copa do Brasil</span>
+                            </div>
+
+                            <!-- Teams VS layout -->
+                            <div class="grid grid-cols-7 items-center text-center my-4">
+                                <!-- Team A -->
+                                <div class="col-span-3 flex flex-col items-center space-y-2">
+                                    <div class="w-14 h-14 rounded-2xl bg-cyan-600/20 border border-cyan-500/30 flex items-center justify-center font-extrabold text-cyan-400 text-lg shadow-inner">CAM</div>
+                                    <span class="font-bold text-white text-base">Atlético-MG</span>
+                                </div>
+                                <!-- VS -->
+                                <div class="col-span-1 text-slate-500 font-extrabold text-xl">VS</div>
+                                <!-- Team B -->
+                                <div class="col-span-3 flex flex-col items-center space-y-2">
+                                    <div class="w-14 h-14 rounded-2xl bg-red-600/20 border border-red-500/30 flex items-center justify-center font-extrabold text-red-400 text-lg shadow-inner">CRU</div>
+                                    <span class="font-bold text-white text-base">Cruzeiro</span>
+                                </div>
+                            </div>
+
+                            <!-- Live Vote Stats Bar -->
+                            <div class="mt-8 space-y-2">
+                                <div class="flex justify-between text-xs font-semibold">
+                                    <span id="match2-teamA-label" class="text-cyan-400">Atlético-MG (51%)</span>
+                                    <span id="match2-teamB-label" class="text-red-400">Cruzeiro (49%)</span>
+                                </div>
+                                <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden flex">
+                                    <div id="match2-barA" class="bg-cyan-500 h-full transition-all duration-500" style="width: 51%"></div>
+                                    <div id="match2-barB" class="bg-red-500 h-full transition-all duration-500" style="width: 49%"></div>
+                                </div>
+                                <p id="match2-total" class="text-center text-xs text-slate-400 pt-1">Total de votos: <span class="font-bold text-slate-200">2.105</span></p>
+                            </div>
+                        </div>
+
+                        <!-- Voting Buttons -->
+                        <div class="grid grid-cols-2 gap-4 mt-8 pt-6 border-t border-slate-800">
+                            <button onclick="voteMatch(2, 'A')" class="bg-cyan-600/20 hover:bg-cyan-600 hover:text-white text-cyan-400 border border-cyan-500/40 font-bold py-2.5 rounded-xl transition duration-300 flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-thumbs-up"></i>
+                                <span>Votar Atlético-MG</span>
+                            </button>
+                            <button onclick="voteMatch(2, 'B')" class="bg-red-600/20 hover:bg-red-600 hover:text-white text-red-400 border border-red-500/40 font-bold py-2.5 rounded-xl transition duration-300 flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-thumbs-up"></i>
+                                <span>Votar Cruzeiro</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- CONTACT / NEWSLETTER SECTION -->
+        <section id="contato" class="py-16">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="bg-gradient-to-br from-cardbase to-slate-900 border border-slate-700/60 rounded-3xl p-8 sm:p-12 shadow-2xl text-center relative overflow-hidden">
+                    <div class="absolute -right-16 -bottom-16 w-64 h-64 bg-pitch-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                    
+                    <span class="text-pitch-500 font-bold tracking-wider uppercase text-xs">Fique por dentro</span>
+                    <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight mt-1 mb-4">Receba os gols e resumos no seu e-mail</h2>
+                    <p class="text-slate-400 text-sm max-w-xl mx-auto mb-8">Cadastre-se gratuitamente para não perder nenhuma novidade da rodada, tabelas atualizadas e análises exclusivas do FutMania.</p>
+                    
+                    <form onsubmit="handleNewsletter(event)" class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                        <input type="email" required placeholder="Seu melhor e-mail..." class="flex-grow bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-pitch-500 text-sm">
+                        <button type="submit" class="bg-pitch-500 hover:bg-pitch-600 text-darkbase font-bold px-6 py-3 rounded-xl transition duration-300 text-sm shadow-lg shadow-pitch-500/20">
+                            Inscrever-se
+                        </button>
+                    </form>
+                    <div id="newsletter-msg" class="hidden mt-4 text-xs font-semibold text-emerald-400"></div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 border-t border-slate-800 pt-12 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+                
+                <!-- Col 1 -->
+                <div class="space-y-4 md:col-span-1">
+                    <div class="flex items-center space-x-2">
+                        <div class="bg-gradient-to-tr from-pitch-600 to-pitch-500 text-white p-2 rounded-xl">
+                            <i class="fa-solid fa-futbol"></i>
+                        </div>
+                        <span class="text-xl font-extrabold text-white">Fut<span class="text-pitch-500">Mania</span></span>
+                    </div>
+                    <p class="text-slate-400 text-xs leading-relaxed">
+                        O seu portal definitivo para acompanhar tabelas, notícias em tempo real e palpites de futebol com precisão e dinamismo.
+                    </p>
+                </div>
+
+                <!-- Col 2 -->
+                <div>
+                    <h4 class="text-white font-bold text-sm mb-4">Navegação</h4>
+                    <ul class="space-y-2 text-xs text-slate-400">
+                        <li><a href="#inicio" class="hover:text-pitch-400 transition">Início</a></li>
+                        <li><a href="#noticias" class="hover:text-pitch-400 transition">Últimas Notícias</a></li>
+                        <li><a href="#tabela" class="hover:text-pitch-400 transition">Tabela de Classificação</a></li>
+                        <li><a href="#jogos" class="hover:text-pitch-400 transition">Jogos e Palpites</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 3 -->
+                <div>
+                    <h4 class="text-white font-bold text-sm mb-4">Campeonatos</h4>
+                    <ul class="space-y-2 text-xs text-slate-400">
+                        <li><a href="#" class="hover:text-pitch-400 transition">Campeonato Brasileiro</a></li>
+                        <li><a href="#" class="hover:text-pitch-400 transition">Copa do Brasil</a></li>
+                        <li><a href="#" class="hover:text-pitch-400 transition">Libertadores da América</a></li>
+                        <li><a href="#" class="hover:text-pitch-400 transition">Futebol Internacional</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 4 -->
+                <div>
+                    <h4 class="text-white font-bold text-sm mb-4">Redes Sociais</h4>
+                    <div class="flex space-x-3">
+                        <a href="#" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-pitch-500 hover:text-darkbase text-slate-300 flex items-center justify-center transition duration-300">
+                            <i class="fa-brands fa-instagram"></i>
+                        </a>
+                        <a href="#" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-pitch-500 hover:text-darkbase text-slate-300 flex items-center justify-center transition duration-300">
+                            <i class="fa-brands fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-pitch-500 hover:text-darkbase text-slate-300 flex items-center justify-center transition duration-300">
+                            <i class="fa-brands fa-youtube"></i>
+                        </a>
+                        <a href="#" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-pitch-500 hover:text-darkbase text-slate-300 flex items-center justify-center transition duration-300">
+                            <i class="fa-brands fa-twitch"></i>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="border-t border-slate-800/80 pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500">
+                <p>&copy; 2026 FutMania Portal. Todos os direitos reservados.</p>
+                <p class="mt-2 sm:mt-0">Desenvolvido com paixão para os amantes do futebol.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Mobile Menu Toggle
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu on clicking links
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Match Poll Voting State & Logic
+        const matchData = {
+            1: { votesA: 824, votesB: 596 },
+            2: { votesA: 1074, votesB: 1031 }
+        };
+
+        function voteMatch(matchId, teamChoice) {
+            if (teamChoice === 'A') {
+                matchData[matchId].votesA += 1;
+            } else {
+                matchData[matchId].votesB += 1;
+            }
+
+            const total = matchData[matchId].votesA + matchData[matchId].votesB;
+            const pctA = Math.round((matchData[matchId].votesA / total) * 100);
+            const pctB = 100 - pctA;
+
+            // Update DOM elements
+            if (matchId === 1) {
+                document.getElementById('match1-teamA-label').innerText = `São Paulo (${pctA}%)`;
+                document.getElementById('match1-teamB-label').innerText = `Corinthians (${pctB}%)`;
+                document.getElementById('match1-barA').style.width = pctA + '%';
+                document.getElementById('match1-barB').style.width = pctB + '%';
+                document.getElementById('match1-total').innerHTML = `Total de votos: <span class="font-bold text-slate-200">${total.toLocaleString()}</span>`;
+            } else if (matchId === 2) {
+                document.getElementById('match2-teamA-label').innerText = `Atlético-MG (${pctA}%)`;
+                document.getElementById('match2-teamB-label').innerText = `Cruzeiro (${pctB}%)`;
+                document.getElementById('match2-barA').style.width = pctA + '%';
+                document.getElementById('match2-barB').style.width = pctB + '%';
+                document.getElementById('match2-total').innerHTML = `Total de votos: <span class="font-bold text-slate-200">${total.toLocaleString()}</span>`;
+            }
+        }
+
+        // Newsletter simulation feedback (no alert!)
+        function handleNewsletter(event) {
+            event.preventDefault();
+            const msgEl = document.getElementById('newsletter-msg');
+            msgEl.textContent = '✅ Inscrição realizada com sucesso! Bem-vindo ao FutMania.';
+            msgEl.classList.remove('hidden');
+            event.target.reset();
+            setTimeout(() => {
+                msgEl.classList.add('hidden');
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
